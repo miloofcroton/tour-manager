@@ -1,0 +1,40 @@
+{
+  "name": "tour-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "coverage": "jest --coverage --detectOpenHandles",
+    "jest": "jest --verbose",
+    "test": "npm run jest",
+    "test:watch": "npm run jest -- --watch",
+    "start": "nodemon index.js"
+  },
+  "devDependencies": {
+    "eslint": "^5.6.1",
+    "jest": "^23.6.0",
+    "dotenv": "^6.0.0",
+    "nodemon": "^1.18.4",
+    "supertest": "^3.3.0"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "mongoose": "^5.3.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/miloofcroton/tour-manager.git"
+  },
+  "keywords": [],
+  "author": "Jack Toumey <jack@toumey.io>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/miloofcroton/tour-manager/issues"
+  },
+  "homepage": "https://github.com/miloofcroton/tour-manager#readme"
+}
