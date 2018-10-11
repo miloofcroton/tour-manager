@@ -103,11 +103,11 @@ describe('Tours e2e tests', () => {
 
         it('creates a stop', () => {
 
-            const stop = { zip: '97220' };
+            const stop = { zip: '95693' };
             return request(app)
                 .post(`/api/tours/${createdTours[0]._id}/stops`)
                 .send(stop)
-                .then(({ body }) => expect(body.stops[0].location.zip).toEqual(stop.zip));
+                .then(({ body }) => expect(body.stops[1].location.zip).toEqual(stop.zip));
         });
 
         it('updates the attendees for a stop', () => {
