@@ -75,15 +75,20 @@ describe('Tours e2e tests', () => {
     };
 
     beforeEach(() => {
-        return dropCollection('tours');
+        return dropCollection('tours_test');
     });
     beforeEach(() => {
-        return Promise.all(tours.map(createTour)).then(toursRes => {
-            createdTours = toursRes;
-        });
+        return Promise.all(tours.map(createTour))
+            .then(toursRes => {
+                createdTours = toursRes;
+            });
     });
 
-    
+    it('gets a tour by id', () => {
+        return request(app)
+            .get(`/api/tours/${createdTours[0]._id}`)
+            .then(res => expect(res.body).toEqual(createdTours[0]));
+    });
 
     it('gets all tours', () => {
         return request(app)
