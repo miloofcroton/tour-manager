@@ -24,7 +24,7 @@ describe('Tours e2e tests', () => {
                     condition: chance.string(),
                     windSpeed: chance.string()
                 },
-                attendance: chance.natural({ min: 1 })
+                attendance: chance.natural({ min: 1, max: 1000 })
             }]
         },
         {
@@ -42,7 +42,7 @@ describe('Tours e2e tests', () => {
                     condition: chance.string(),
                     windSpeed: chance.string()
                 },
-                attendance: chance.natural({ min: 1 })
+                attendance: chance.natural({ min: 1, max: 1000 })
             }]
         },
         {
@@ -60,7 +60,7 @@ describe('Tours e2e tests', () => {
                     condition: chance.string(),
                     windSpeed: chance.string()
                 },
-                attendance: chance.natural({ min: 1 })
+                attendance: chance.natural({ min: 1, max: 1000 })
             }]
         }
     ];
@@ -103,7 +103,7 @@ describe('Tours e2e tests', () => {
                         condition: chance.string(),
                         windSpeed: chance.string()
                     },
-                    attendance: chance.natural({ min: 1 })
+                    attendance: chance.natural({ min: 1, max: 1000 })
                 }]
             };
     
@@ -154,7 +154,7 @@ describe('Tours e2e tests', () => {
                     condition: chance.string(),
                     windSpeed: chance.string()
                 },
-                attendance: chance.natural({ min: 1 })
+                attendance: chance.natural({ min: 1, max: 1000 })
             };
 
             return request(app)
@@ -163,8 +163,19 @@ describe('Tours e2e tests', () => {
                 .then(({ body }) => expect(body.stops[1]).toEqual({ ...data, _id: expect.any(String) }));
         });
 
+        it('updates the attendees for a stop', () => {
 
+            const original = createdTours[0].stops[0].attendance;
 
+            return request(app)
+                .post(`/api/tours/${createdTours[0]._id}/stops/${createdTours[0].stops[0]._id}/attendance`)
+                .send({ attendance: original + 1 })
+                .then(({ body }) => expect(body.stops[0].attendance).toEqual(original + 1));
+        });
+
+        
+
+        
     });
 
 
