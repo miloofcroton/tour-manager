@@ -8,8 +8,26 @@ const chance = new Chance();
 describe('Tours e2e tests', () => {
 
 
-    let tours = Array.apply(null, { length: 100 }).map(() => {
-        return {
+    let tours = [
+        {
+            title: 'Ringling Bros',
+            activities: [chance.animal(), chance.animal()],
+            launchDate: chance.date(),
+            stops: [{
+                location: {
+                    city: chance.city(),
+                    state: chance.state(),
+                    zip: chance.zip()
+                },
+                weather: {
+                    temperature: chance.string(),
+                    condition: chance.string(),
+                    windSpeed: chance.string()
+                },
+                attendance: chance.natural({ min: 1 })
+            }]
+        },
+        {
             title: chance.string(),
             activities: [chance.animal(), chance.animal()],
             launchDate: chance.date(),
@@ -26,8 +44,26 @@ describe('Tours e2e tests', () => {
                 },
                 attendance: chance.natural({ min: 1 })
             }]
-        };
-    });
+        },
+        {
+            title: chance.string(),
+            activities: [chance.animal(), chance.animal()],
+            launchDate: chance.date(),
+            stops: [{
+                location: {
+                    city: chance.city(),
+                    state: chance.state(),
+                    zip: chance.zip()
+                },
+                weather: {
+                    temperature: chance.string(),
+                    condition: chance.string(),
+                    windSpeed: chance.string()
+                },
+                attendance: chance.natural({ min: 1 })
+            }]
+        }
+    ];
 
     let createdTours;
 
@@ -47,7 +83,9 @@ describe('Tours e2e tests', () => {
         });
     });
 
-    it('gets all tours on get', () => {
+    
+
+    it('gets all tours', () => {
         return request(app)
             .get('/api/tours')
             .then(retrievedTours => {
@@ -57,7 +95,16 @@ describe('Tours e2e tests', () => {
             });
     });
 
-    it('creates a tour on post', () => {
+    it('gets all tours for a query', () => {
+        return request(app)
+            .get('/api/tours')
+            .query({ title: 'Ringling Bros' })
+            .then(retrievedTours => {
+                expect(retrievedTours.body).toContainEqual(createdTours[0]);
+            });
+    });
+
+    it('creates a tour', () => {
 
         const data = {
             title: chance.string(),
