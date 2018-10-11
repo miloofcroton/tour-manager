@@ -1,7 +1,7 @@
 require('dotenv').config();
 const weatherman = require('../../lib/util/weatherman');
 
-describe('the location/weather setter', () => {
+describe('middleware that uses weather api', () => {
 
     it('gets the necessary info for a given zip code', done => {
 
@@ -14,10 +14,19 @@ describe('the location/weather setter', () => {
             called = true;
             error = err;
 
+            const expectedLocation = {
+                city: 'Portland',
+                state: 'OR',
+                country: 'US',
+                zip: '97220'
+            };
+
             expect(called).toBeTruthy();
             expect(error).toBeUndefined();
-            expect(req.location).toEqual(expect.any(Object));
-            expect(req.weather).toEqual(expect.any(Object));
+            expect(req.stop.location).toEqual(expectedLocation);
+            expect(req.stop.weather.temperature).toEqual(expect.any(String));
+            expect(req.stop.weather.condition).toEqual(expect.any(String));
+            expect(req.stop.weather.windSpeed).toEqual(expect.any(String));
             done();
         };
         weatherman(req, null, next);
