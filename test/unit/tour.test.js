@@ -13,8 +13,8 @@ describe('tour model', () => {
             .then(createdTour => {
                 expect(createdTour).toHaveProperty('_id');
                 expect(createdTour.title).toEqual('Ringling Bros');
-                expect(createdTour.activities).toEqual(['Ringling', 'Being bros']);
-                expect(createdTour.launchDate).toBeInstanceOf('Date');
+                expect(createdTour.toJSON().activities).toEqual(['Ringling', 'Being bros']);
+                expect(createdTour.launchDate).toBeInstanceOf(Date);
             });
     });
 
