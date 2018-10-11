@@ -24,6 +24,7 @@ describe('middleware that uses weather api', () => {
             expect(called).toBeTruthy();
             expect(error).toBeUndefined();
             expect(req.stop.location).toEqual(expectedLocation);
+            expect(Object.keys(req.stop.weather)).toEqual(['temperature', 'condition', 'windSpeed']);
             expect(req.stop.weather.temperature).toEqual(expect.any(String));
             expect(req.stop.weather.condition).toEqual(expect.any(String));
             expect(req.stop.weather.windSpeed).toEqual(expect.any(String));

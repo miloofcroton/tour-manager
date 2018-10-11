@@ -14,17 +14,17 @@ describe('Tours e2e tests', () => {
     let tours = [
         {
             title: 'Ringling Bros',
-            activities: [chance.animal(), chance.animal()],
+            activities: ['Ringling around the rosey', 'Being bros'],
             launchDate: chance.date()
         },
         {
-            title: 'Circus Ole',
-            activities: [chance.animal(), chance.animal()],
+            title: 'Circus Ole Ole Ole Ole',
+            activities: ['Running away from bulls', 'Trying not to get gored'],
             launchDate: chance.date()
         },
         {
             title: 'Petting Zoo',
-            activities: [chance.animal(), chance.animal()],
+            activities: ['Playing with puppies', 'Getting Instagram likes'],
             launchDate: chance.date()
         }
     ];
