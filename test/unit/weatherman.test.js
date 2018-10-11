@@ -6,7 +6,7 @@ describe('the location/weather setter', () => {
     it('gets the necessary info for a given zip code', done => {
 
         const req = {
-            body: { zip: '97209' }
+            body: { zip: '97220' }
         };
         let error, called = false;
 
@@ -20,7 +20,7 @@ describe('the location/weather setter', () => {
             expect(req.weather).toEqual(expect.any(Object));
             done();
         };
-        weatherman()(req, null, next);
+        weatherman(req, null, next);
 
     });
 

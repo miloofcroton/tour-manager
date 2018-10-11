@@ -28,19 +28,7 @@ describe('Tours e2e tests', () => {
             launchDate: chance.date()
         }
     ];
-    let stops = [{
-        location: {
-            city: chance.city(),
-            state: chance.state(),
-            zip: chance.zip()
-        },
-        weather: {
-            temperature: chance.string(),
-            condition: chance.string(),
-            windSpeed: chance.string()
-        },
-        attendance: chance.natural({ min: 1, max: 1000 })
-    }]
+    let stop = { zip: 97220 };
 
     let createdTours;
 
@@ -50,6 +38,12 @@ describe('Tours e2e tests', () => {
             .send(tour)
             .then(res => res.body);
     };
+    const createStop = tour => {
+        return request(app)
+            .post(`/api/tours/${tour._id}/stops`)
+            .send(stop)
+            .then(res => res.body);
+    };
 
     beforeEach(() => {
         return dropCollection('tours');
@@ -57,6 +51,10 @@ describe('Tours e2e tests', () => {
     beforeEach(() => {
         return Promise.all(tours.map(createTour))
             .then(toursRes => createdTours = toursRes);
+    });
+    beforeEach(() => {
+        return Promise.all(createdTours.map(createStop))
+            .then(stopsRes => createdTours = stopsRes);
     });
 
     describe('tour tests', () => {
@@ -105,21 +103,19 @@ describe('Tours e2e tests', () => {
 
         it('creates a stop', () => {
 
-            const stop = { zip: chance.zip() };
-
+            const stop = { zip: '97220' };
             return request(app)
                 .post(`/api/tours/${createdTours[0]._id}/stops`)
                 .send(stop)
-                .then(({ body }) => expect(body.stops[1]).toEqual({ ...stop, _id: expect.any(String) }));
+                .then(({ body }) => expect(body.stops[0].location.zip).toEqual(stop.zip));
         });
 
         it('updates the attendees for a stop', () => {
 
-            const original = createdTours[0].stops[0].attendance;            
             return request(app)
                 .post(`/api/tours/${createdTours[0]._id}/stops/${createdTours[0].stops[0]._id}/attendance`)
-                .send({ attendance: original + 1 })
-                .then(({ body }) => expect(body.stops[0].attendance).toEqual(original + 1));
+                .send({ attendance: 100 })
+                .then(({ body }) => expect(body.stops[0].attendance).toEqual(100));
                 
         });
         
@@ -128,7 +124,6 @@ describe('Tours e2e tests', () => {
             const toDelete = createdTours[0].stops[0]._id;
             return request(app)
                 .delete(`/api/tours/${createdTours[0]._id}/stops/${toDelete}`)
-                // .then(({ body }) => expect(body.removed).toEqual(true));
                 .then(({ body }) => expect(body.stops).toEqual([]));
 
         });
