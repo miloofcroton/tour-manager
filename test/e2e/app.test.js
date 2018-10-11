@@ -1,8 +1,11 @@
+require('dotenv').config();
+
 const { dropCollection } = require('../util/db');
 const request = require('supertest');
 const app = require('../../lib/app');
 const Chance = require('chance');
 const chance = new Chance();
+
 
 
 describe('Tours e2e tests', () => {
@@ -12,58 +15,32 @@ describe('Tours e2e tests', () => {
         {
             title: 'Ringling Bros',
             activities: [chance.animal(), chance.animal()],
-            launchDate: chance.date(),
-            stops: [{
-                location: {
-                    city: chance.city(),
-                    state: chance.state(),
-                    zip: chance.zip()
-                },
-                weather: {
-                    temperature: chance.string(),
-                    condition: chance.string(),
-                    windSpeed: chance.string()
-                },
-                attendance: chance.natural({ min: 1, max: 1000 })
-            }]
+            launchDate: chance.date()
         },
         {
-            title: chance.string(),
+            title: 'Circus Ole',
             activities: [chance.animal(), chance.animal()],
-            launchDate: chance.date(),
-            stops: [{
-                location: {
-                    city: chance.city(),
-                    state: chance.state(),
-                    zip: chance.zip()
-                },
-                weather: {
-                    temperature: chance.string(),
-                    condition: chance.string(),
-                    windSpeed: chance.string()
-                },
-                attendance: chance.natural({ min: 1, max: 1000 })
-            }]
+            launchDate: chance.date()
         },
         {
-            title: chance.string(),
+            title: 'Petting Zoo',
             activities: [chance.animal(), chance.animal()],
-            launchDate: chance.date(),
-            stops: [{
-                location: {
-                    city: chance.city(),
-                    state: chance.state(),
-                    zip: chance.zip()
-                },
-                weather: {
-                    temperature: chance.string(),
-                    condition: chance.string(),
-                    windSpeed: chance.string()
-                },
-                attendance: chance.natural({ min: 1, max: 1000 })
-            }]
+            launchDate: chance.date()
         }
     ];
+    let stops = [{
+        location: {
+            city: chance.city(),
+            state: chance.state(),
+            zip: chance.zip()
+        },
+        weather: {
+            temperature: chance.string(),
+            condition: chance.string(),
+            windSpeed: chance.string()
+        },
+        attendance: chance.natural({ min: 1, max: 1000 })
+    }]
 
     let createdTours;
 
@@ -89,20 +66,7 @@ describe('Tours e2e tests', () => {
             const data = {
                 title: chance.string(),
                 activities: [chance.animal(), chance.animal()],
-                launchDate: chance.date(),
-                stops: [{
-                    location: {
-                        city: chance.city(),
-                        state: chance.state(),
-                        zip: chance.zip()
-                    },
-                    weather: {
-                        temperature: chance.string(),
-                        condition: chance.string(),
-                        windSpeed: chance.string()
-                    },
-                    attendance: chance.natural({ min: 1, max: 1000 })
-                }]
+                launchDate: chance.date()
             };
     
             return request(app)
@@ -141,24 +105,12 @@ describe('Tours e2e tests', () => {
 
         it('creates a stop', () => {
 
-            const data = {
-                location: {
-                    city: chance.city(),
-                    state: chance.state(),
-                    zip: chance.zip()
-                },
-                weather: {
-                    temperature: chance.string(),
-                    condition: chance.string(),
-                    windSpeed: chance.string()
-                },
-                attendance: chance.natural({ min: 1, max: 1000 })
-            };
+            const stop = { zip: chance.zip() };
 
             return request(app)
                 .post(`/api/tours/${createdTours[0]._id}/stops`)
-                .send(data)
-                .then(({ body }) => expect(body.stops[1]).toEqual({ ...data, _id: expect.any(String) }));
+                .send(stop)
+                .then(({ body }) => expect(body.stops[1]).toEqual({ ...stop, _id: expect.any(String) }));
         });
 
         it('updates the attendees for a stop', () => {
