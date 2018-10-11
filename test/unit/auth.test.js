@@ -1,4 +1,4 @@
-const auth = require('../../lib/utils/auth');
+const auth = require('../../lib/util/auth');
 
 describe('authentication middleware', () => {
     it('sends back an HttpError if no password provided', () => {

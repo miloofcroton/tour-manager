@@ -1,4 +1,4 @@
-const { getErrors } = require('./helpers');
+const { getErrors } = require('../util/helpers');
 const Tour = require('../../lib/models/Tour');
 const Chance = require('chance');
 const chance = new Chance();
