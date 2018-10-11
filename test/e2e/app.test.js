@@ -75,7 +75,7 @@ describe('Tours e2e tests', () => {
     };
 
     beforeEach(() => {
-        return dropCollection('tours_test');
+        return dropCollection('tours');
     });
     beforeEach(() => {
         return Promise.all(tours.map(createTour))
@@ -84,38 +84,66 @@ describe('Tours e2e tests', () => {
             });
     });
 
-    it('gets a tour by id', () => {
-        return request(app)
-            .get(`/api/tours/${createdTours[0]._id}`)
-            .then(res => expect(res.body).toEqual(createdTours[0]));
-    });
+    describe('tour tests', () => {
 
-    it('gets all tours', () => {
-        return request(app)
-            .get('/api/tours')
-            .then(retrievedTours => {
-                createdTours.forEach(createdTour => {
-                    expect(retrievedTours.body).toContainEqual(createdTour);
+        it('creates a tour', () => {
+    
+            const data = {
+                title: chance.string(),
+                activities: [chance.animal(), chance.animal()],
+                launchDate: chance.date(),
+                stops: [{
+                    location: {
+                        city: chance.city(),
+                        state: chance.state(),
+                        zip: chance.zip()
+                    },
+                    weather: {
+                        temperature: chance.string(),
+                        condition: chance.string(),
+                        windSpeed: chance.string()
+                    },
+                    attendance: chance.natural({ min: 1 })
+                }]
+            };
+    
+            return request(app)
+                .post('/api/tours')
+                .send(data)
+                .then(({ body }) => expect(body.title).toEqual(data.title));
+        });
+    
+        it('gets a tour by id', () => {
+            return request(app)
+                .get(`/api/tours/${createdTours[0]._id}`)
+                .then(res => expect(res.body).toEqual(createdTours[0]));
+        });
+    
+        it('gets all tours', () => {
+            return request(app)
+                .get('/api/tours')
+                .then(retrievedTours => {
+                    createdTours.forEach(createdTour => {
+                        expect(retrievedTours.body).toContainEqual(createdTour);
+                    });
                 });
-            });
+        });
+    
+        it('gets all tours for a query', () => {
+            return request(app)
+                .get('/api/tours')
+                .query({ title: 'Ringling Bros' })
+                .then(retrievedTours => {
+                    expect(retrievedTours.body).toContainEqual(createdTours[0]);
+                });
+        });
     });
 
-    it('gets all tours for a query', () => {
-        return request(app)
-            .get('/api/tours')
-            .query({ title: 'Ringling Bros' })
-            .then(retrievedTours => {
-                expect(retrievedTours.body).toContainEqual(createdTours[0]);
-            });
-    });
+    describe('stop tests', () => {
 
-    it('creates a tour', () => {
+        it('creates a stop', () => {
 
-        const data = {
-            title: chance.string(),
-            activities: [chance.animal(), chance.animal()],
-            launchDate: chance.date(),
-            stops: [{
+            const data = {
                 location: {
                     city: chance.city(),
                     state: chance.state(),
@@ -127,16 +155,17 @@ describe('Tours e2e tests', () => {
                     windSpeed: chance.string()
                 },
                 attendance: chance.natural({ min: 1 })
-            }]
-        };
+            };
 
-        return request(app)
-            .post('/api/tours')
-            .send(data)
-            .then(({ body }) => expect(body.title).toEqual(data.title));
+            return request(app)
+                .post(`/api/tours/${createdTours[0]._id}/stops`)
+                .send(data)
+                .then(({ body }) => expect(body.stops[1]).toEqual({ ...data, _id: expect.any(String) }));
+        });
+
+
+
     });
-
-
 
 
 });
