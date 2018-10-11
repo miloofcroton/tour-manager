@@ -79,9 +79,7 @@ describe('Tours e2e tests', () => {
     });
     beforeEach(() => {
         return Promise.all(tours.map(createTour))
-            .then(toursRes => {
-                createdTours = toursRes;
-            });
+            .then(toursRes => createdTours = toursRes);
     });
 
     describe('tour tests', () => {
@@ -116,7 +114,7 @@ describe('Tours e2e tests', () => {
         it('gets a tour by id', () => {
             return request(app)
                 .get(`/api/tours/${createdTours[0]._id}`)
-                .then(res => expect(res.body).toEqual(createdTours[0]));
+                .then(({ body }) => expect(body).toEqual(createdTours[0]));
         });
     
         it('gets all tours', () => {
@@ -133,8 +131,8 @@ describe('Tours e2e tests', () => {
             return request(app)
                 .get('/api/tours')
                 .query({ title: 'Ringling Bros' })
-                .then(retrievedTours => {
-                    expect(retrievedTours.body).toContainEqual(createdTours[0]);
+                .then(({ body }) => {
+                    expect(body).toContainEqual(createdTours[0]);
                 });
         });
     });
@@ -173,11 +171,9 @@ describe('Tours e2e tests', () => {
                 
         });
         
-
         it('removes a stop', () => {
 
             const toDelete = createdTours[0].stops[0]._id;
-            console.log(toDelete);
             return request(app)
                 .delete(`/api/tours/${createdTours[0]._id}/stops/${toDelete}`)
                 // .then(({ body }) => expect(body.removed).toEqual(true));
