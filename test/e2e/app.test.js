@@ -165,15 +165,25 @@ describe('Tours e2e tests', () => {
 
         it('updates the attendees for a stop', () => {
 
-            const original = createdTours[0].stops[0].attendance;
-
+            const original = createdTours[0].stops[0].attendance;            
             return request(app)
                 .post(`/api/tours/${createdTours[0]._id}/stops/${createdTours[0].stops[0]._id}/attendance`)
                 .send({ attendance: original + 1 })
                 .then(({ body }) => expect(body.stops[0].attendance).toEqual(original + 1));
+                
         });
-
         
+
+        it('removes a stop', () => {
+
+            const toDelete = createdTours[0].stops[0]._id;
+            console.log(toDelete);
+            return request(app)
+                .delete(`/api/tours/${createdTours[0]._id}/stops/${toDelete}`)
+                // .then(({ body }) => expect(body.removed).toEqual(true));
+                .then(({ body }) => expect(body.stops).toEqual([]));
+
+        });
 
         
     });
